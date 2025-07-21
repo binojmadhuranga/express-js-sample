@@ -1,0 +1,19 @@
+{
+  "name": "express",
+  "version": "1.0.0",
+  "description": "sample",
+  "repository": {
+    "type": "git",
+    "url": "github.com/binojmadhuranga/express-js-sample.git"
+  },
+  "license": "ISC",
+  "author": "binoj",
+  "type": "module",
+  "main": "server.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
