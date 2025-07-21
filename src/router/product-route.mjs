@@ -2,7 +2,8 @@ import { Router } from "express";
 
 const productRouter = Router();
 
-productRouter.get('/', (req, res) => {
+productRouter.get('/all', (req, res) => {
+    
   res.send('Product Home Page');
 });
 

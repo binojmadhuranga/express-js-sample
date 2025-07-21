@@ -1,9 +1,10 @@
 import { Router } from "express";       
+import { userInfo } from "../data/user-info.mjs";   
 
 const userRouter = Router();
 
-userRouter.get('/', (req, res) => {
-  res.send('User Home Page');
+userRouter.get('/get', (req, res) => {
+  res.json(userInfo);
 });
 
 userRouter.post('/create', (req, res) => {
