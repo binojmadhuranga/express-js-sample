@@ -6,7 +6,7 @@ const app = express();
 const PORT = 3000;
 
 // Middleware to parse JSON
-app.use(express.json());
+app.use(express.json()); //before define a route
 
 app.use('/api/v1/products', productRouter);
 app.use('/api/v1/users', userRouter);
