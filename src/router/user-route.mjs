@@ -2,6 +2,7 @@ import { Router } from "express";
 import { userInfo } from "../data/user-info.mjs";
 import { PrismaClient } from "../generated/prisma/index.js";
 
+
 const prisma = new PrismaClient();
 const userRouter = Router();
 
@@ -19,6 +20,45 @@ userRouter.get('/get-all', async (_, res) => {
     });
   }
 });
+
+
+
+ userRouter.get('/get-user/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    if (!id) {
+      return res.status(400).json({ 
+        message: 'User ID is required', 
+        error: 'Missing user ID' 
+      });
+    }
+
+  
+    const user = await prisma.user.findUnique({
+      where: { id: parseInt(id, 10) }
+    });
+
+    if (!user) {
+      return res.status(404).json({ 
+        message: 'User not found', 
+        error: 'No user found with the provided ID' 
+      });
+    }
+
+    return res.status(200).json(user);
+
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    return res.status(500).json({ 
+      message: 'Error fetching user', 
+      error: error.message 
+    });
+  }
+});
+
+
+
+
 
 
 
