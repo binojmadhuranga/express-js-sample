@@ -106,13 +106,13 @@ userRouter.put('/update-user', async (req, res) => {
   const { id, name, email } = req.body;
 
   try {
-    // Validate required fields
+   
     if (!id || !name || !email) {
       return res.status(400).json({
         message: 'ID, name, and email are required',
         error: 'Missing required fields'
       });
-    }
+    }  
 
     // Update user in database
     const updatedUser = await prisma.user.update({
@@ -135,5 +135,33 @@ userRouter.put('/update-user', async (req, res) => {
 });
 
 
+userRouter.delete('/delete-user/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    if (!id) {
+      return res.status(400).json({
+        message: 'User ID is required',
+        error: 'Missing user ID'
+      });
+    }
+
+    // Delete user from database
+    await prisma.user.delete({
+      where: { id: parseInt(id, 10) }
+    });
+
+    return res.status(200).json({
+      message: 'User deleted successfully'
+    });
+
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    return res.status(500).json({
+      message: 'Error deleting user',
+      error: error.message
+    });
+  }
+});
 
 export default userRouter;
