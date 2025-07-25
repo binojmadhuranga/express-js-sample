@@ -14,34 +14,34 @@ userRouter.get('/get-all', async (_, res) => {
   }
   catch (error) {
     console.error('Error fetching users:', error);
-    return res.status(500).json({ 
-      message: 'Error fetching users', 
-      error: error.message 
+    return res.status(500).json({
+      message: 'Error fetching users',
+      error: error.message
     });
   }
 });
 
 
 
- userRouter.get('/get-user/:id', async (req, res) => {
+userRouter.get('/get-user/:id', async (req, res) => {
   const { id } = req.params;
   try {
     if (!id) {
-      return res.status(400).json({ 
-        message: 'User ID is required', 
-        error: 'Missing user ID' 
+      return res.status(400).json({
+        message: 'User ID is required',
+        error: 'Missing user ID'
       });
     }
 
-  
+
     const user = await prisma.user.findUnique({
       where: { id: parseInt(id, 10) }
     });
 
     if (!user) {
-      return res.status(404).json({ 
-        message: 'User not found', 
-        error: 'No user found with the provided ID' 
+      return res.status(404).json({
+        message: 'User not found',
+        error: 'No user found with the provided ID'
       });
     }
 
@@ -49,28 +49,24 @@ userRouter.get('/get-all', async (_, res) => {
 
   } catch (error) {
     console.error('Error fetching user:', error);
-    return res.status(500).json({ 
-      message: 'Error fetching user', 
-      error: error.message 
+    return res.status(500).json({
+      message: 'Error fetching user',
+      error: error.message
     });
   }
 });
 
 
 
-
-
-
-
 userRouter.post('/create-user', async (req, res) => {
   try {
     const { name, email } = req.body;
-    
+
     // Validate required fields
     if (!name || !email) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         message: 'Name and email are required',
-        error: 'Missing required fields' 
+        error: 'Missing required fields'
       });
     }
 
@@ -81,35 +77,62 @@ userRouter.post('/create-user', async (req, res) => {
         email
       }
     });
-    
-    return res.status(201).json({ 
-      message: 'User created successfully', 
-      data: newUser 
+
+    return res.status(201).json({
+      message: 'User created successfully',
+      data: newUser
     });
-    
+
   } catch (error) {
     console.error('Error creating user:', error);
-    
+
     // Handle unique constraint violation (duplicate email)
     if (error.code === 'P2002') {
-      return res.status(400).json({ 
-        message: 'Email already exists', 
-        error: 'Duplicate email address' 
+      return res.status(400).json({
+        message: 'Email already exists',
+        error: 'Duplicate email address'
       });
     }
-    
-    return res.status(500).json({ 
-      message: 'Error creating user', 
-      error: error.message 
+
+    return res.status(500).json({
+      message: 'Error creating user',
+      error: error.message
     });
   }
 });
 
 
+userRouter.put('/update-user', async (req, res) => {
+  const { id, name, email } = req.body;
 
+  try {
+    // Validate required fields
+    if (!id || !name || !email) {
+      return res.status(400).json({
+        message: 'ID, name, and email are required',
+        error: 'Missing required fields'
+      });
+    }
 
-// userRouter.put('/update-user', async (req, res) => {
+    // Update user in database
+    const updatedUser = await prisma.user.update({
+      where: { id: parseInt(id, 10) },
+      data: { name, email }
+    });
 
+    return res.status(200).json({
+      message: 'User updated successfully',
+      data: updatedUser
+    });
+
+  } catch (error) {
+    console.error('Error updating user:', error);
+    return res.status(500).json({
+      message: 'Error updating user',
+      error: error.message
+    });
+  }
+});
 
 
 
