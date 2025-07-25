@@ -5,8 +5,19 @@ import { PrismaClient } from "../generated/prisma/index.js";
 const prisma = new PrismaClient();
 const userRouter = Router();
 
-userRouter.get('/get', (req, res) => {
-  res.json(userInfo);
+userRouter.get('/get-all', async (_, res) => {
+  try {
+    // Fetch all users from the database
+    const users = await prisma.user.findMany();
+    return res.status(200).json(users);
+  }
+  catch (error) {
+    console.error('Error fetching users:', error);
+    return res.status(500).json({ 
+      message: 'Error fetching users', 
+      error: error.message 
+    });
+  }
 });
 
 
@@ -53,6 +64,11 @@ userRouter.post('/create-user', async (req, res) => {
     });
   }
 });
+
+
+
+
+// userRouter.put('/update-user', async (req, res) => {
 
 
 
